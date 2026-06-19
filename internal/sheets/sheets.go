@@ -53,9 +53,9 @@ func (c *Client) ReadHoldings() ([]models.Holding, error) {
 	}
 
 	holdings := make([]models.Holding, 0, len(resp.Values))
-	for i, row := range resp.Values {
+	for _, row := range resp.Values {
 		if len(row) < 4 {
-			return nil, fmt.Errorf("holdings row %d: expected at least 4 columns, got %d", i+2, len(row))
+			continue // skip blank or incomplete rows
 		}
 		h := models.Holding{
 			Ticker:       str(row, 0),

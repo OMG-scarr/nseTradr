@@ -9,13 +9,22 @@ services:
       - N8N_BASIC_AUTH_PASSWORD=@dmin123
     volumes:
       - n8n_data:/home/node/.n8n
-      # Mount the compiled binary into the container
-      - /home/omg-scarr/nseTradr/bin:/opt/nse-trader/bin
-      # Mount secrets and credentials
-      - /home/omg-scarr/nseTradr/credentials.json:/opt/nse-trader/credentials.json
-      - /home/omg-scarr/nseTradr/.env:/opt/nse-trader/.env
-      # Mount logs so both host and container share the same log file
-      - /home/omg-scarr/nseTradr/logs:/opt/nse-trader/logs
+      - /home/omg-scarr/Documents/nseTradr/bin:/opt/nseTradr/bin
+      - /home/omg-scarr/Documents/nseTradr/credentials.json:/opt/nseTradr/credentials.json
+      - /home/omg-scarr/Documents/nseTradr/.env:/opt/nseTradr/.env
+      - /home/omg-scarr/Documents/nseTradr/logs:/opt/nseTradr/logs
+
+  nse-api:
+    image: ubuntu:22.04
+    ports:
+      - "8080:8080"
+    volumes:
+      - /home/omg-scarr/Documents/nseTradr/bin:/opt/nseTradr/bin
+      - /home/omg-scarr/Documents/nseTradr/credentials.json:/opt/nseTradr/credentials.json
+      - /home/omg-scarr/Documents/nseTradr/.env:/opt/nseTradr/.env
+      - /home/omg-scarr/Documents/nseTradr/logs:/opt/nseTradr/logs
+    command: /opt/nseTradr/bin/nseTradr serve
+    restart: unless-stopped
 
 volumes:
   n8n_data:

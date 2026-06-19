@@ -76,6 +76,6 @@ func (c *Client) AllStocks() ([]Stock, error) {
 
 func (c *Client) SingleStock(ticker string) (*Stock, error) {
 	var result Stock
-	err := c.get("/markets/exchanges/NSE/stocks/resolve/"+ticker, &result)
+	err := c.get("/markets/exchanges/NSE/stocks/"+ticker, &result)
 	return &result, err
 }

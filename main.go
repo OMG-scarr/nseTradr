@@ -12,6 +12,7 @@ import (
 	"nseTradr/cmd/rebalance"
 	"nseTradr/cmd/scanner"
 	"nseTradr/cmd/sentiment"
+	"nseTradr/cmd/serve"
 )
 
 func main() {
@@ -43,6 +44,9 @@ func main() {
 	case "alerts":
 		fmt.Println("=== Price Alert Monitor ===")
 		err = alerts.Run()
+	case "serve":
+		fmt.Println("=== NSE Trader HTTP Server ===")
+		err = serve.Run()
 	default:
 		fmt.Printf("Unknown command: %s\n\n", command)
 		printUsage()

@@ -16,8 +16,8 @@ import (
 )
 
 var NewsSources = []string{
-	"https://thekenyawallstreet.com/feed/",
-	"https://businessdailyafrica.com/rss",
+	"https://www.standardmedia.co.ke/rss/business.php",
+	"https://www.capitalfm.co.ke/business/feed/",
 	"https://mwangocapital.substack.com/feed",
 }
 

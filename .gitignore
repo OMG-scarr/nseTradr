@@ -5,3 +5,4 @@ logs/
 nseTradr
 *.jsonl
 Guide.md
+docker-compose.yml

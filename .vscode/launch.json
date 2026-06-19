@@ -1,0 +1,59 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run: Scanner",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["scanner"],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Run: Sentiment",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["sentiment"],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Run: DCA + Buy List",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["dca"],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Run: Rebalancer",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["rebalance"],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Run: Price Alerts",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["alerts"],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Debug: Scanner (breakpoints)",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/main.go",
+      "args": ["scanner"],
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

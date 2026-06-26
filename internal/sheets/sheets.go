@@ -263,3 +263,55 @@ func float64val(row []interface{}, i int) float64 {
 	v, _ := strconv.ParseFloat(s, 64)
 	return v
 }
+
+// UpdateHolding updates SharesHeld, AvgBuyPrice, and LastUpdated for a ticker after a trade.
+func (c *Client) UpdateHolding(ticker string, newShares, newAvg float64) error {
+	resp, err := c.svc.Spreadsheets.Values.Get(c.spreadsheet, "Holdings!A2:G").Do()
+	if err != nil {
+		return fmt.Errorf("read holdings for update: %w", err)
+	}
+
+	// Find the row index for this ticker
+	rowIndex := -1
+	for i, row := range resp.Values {
+		if len(row) > 0 && strings.EqualFold(str(row, 0), ticker) {
+			rowIndex = i
+			break
+		}
+	}
+
+	if rowIndex == -1 {
+		return fmt.Errorf("ticker %s not found in Holdings sheet", ticker)
+	}
+
+	// Row index in sheet = rowIndex + 2 (1 for header, 1 for 0-based index)
+	sheetRow := rowIndex + 2
+	rangeStr := fmt.Sprintf("Holdings!C%d:G%d", sheetRow, sheetRow)
+
+	values := [][]interface{}{
+		{
+			newShares,
+			newAvg,
+			// TargetPct and WeeklyBudget unchanged — read existing values
+			str(resp.Values[rowIndex], 4),
+			str(resp.Values[rowIndex], 5),
+			time.Now().Format("2006-01-02 15:04:05"),
+		},
+	}
+
+	return c.write(rangeStr, values)
+}
+
+// ReadHolding reads a single holding by ticker.
+func (c *Client) ReadHolding(ticker string) (*models.Holding, error) {
+	holdings, err := c.ReadHoldings()
+	if err != nil {
+		return nil, err
+	}
+	for _, h := range holdings {
+		if strings.EqualFold(h.Ticker, ticker) {
+			return &h, nil
+		}
+	}
+	return nil, fmt.Errorf("ticker %s not found in Holdings sheet", ticker)
+}

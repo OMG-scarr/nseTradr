@@ -13,6 +13,7 @@ import (
 	"nseTradr/cmd/scanner"
 	"nseTradr/cmd/sentiment"
 	"nseTradr/cmd/serve"
+	"nseTradr/cmd/trade"
 )
 
 func main() {
@@ -47,6 +48,9 @@ func main() {
 	case "serve":
 		fmt.Println("=== NSE Trader HTTP Server ===")
 		err = serve.Run()
+	case "trade":
+		fmt.Println("=== Trade Recorder ===")
+		err = trade.Run()
 	default:
 		fmt.Printf("Unknown command: %s\n\n", command)
 		printUsage()

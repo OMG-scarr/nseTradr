@@ -6,3 +6,4 @@ nseTradr
 *.jsonl
 Guide.md
 docker-compose.yml
+nse-automation-upgrades.md

@@ -315,3 +315,67 @@ func (c *Client) ReadHolding(ticker string) (*models.Holding, error) {
 	}
 	return nil, fmt.Errorf("ticker %s not found in Holdings sheet", ticker)
 }
+
+// ReadDailyPrices reads all rows from the DailyPrices tab.
+func (c *Client) ReadDailyPrices() ([]models.ScanResult, error) {
+	resp, err := c.svc.Spreadsheets.Values.Get(c.spreadsheet, "DailyPrices!A2:G").Do()
+	if err != nil {
+		return nil, fmt.Errorf("read daily prices: %w", err)
+	}
+
+	results := make([]models.ScanResult, 0, len(resp.Values))
+	for _, row := range resp.Values {
+		if len(row) < 4 {
+			continue
+		}
+		r := models.ScanResult{
+			Date:      str(row, 0),
+			Ticker:    str(row, 1),
+			Name:      str(row, 2),
+			Price:     float64val(row, 3),
+			ChangePct: float64val(row, 4),
+			Volume:    int64(float64val(row, 5)),
+			Signal:    str(row, 6),
+		}
+		if r.Ticker == "" {
+			continue
+		}
+		results = append(results, r)
+	}
+	return results, nil
+}
+
+// WriteAlertThresholds overwrites the AlertAbove and AlertBelow columns in the Alerts sheet.
+func (c *Client) WriteAlertThresholds(updates []models.ThresholdUpdate) error {
+	// Read current alerts to find row positions
+	resp, err := c.svc.Spreadsheets.Values.Get(c.spreadsheet, "Alerts!A2:D").Do()
+	if err != nil {
+		return fmt.Errorf("read alerts for update: %w", err)
+	}
+
+	// Build a map of ticker -> update
+	updateMap := make(map[string]models.ThresholdUpdate)
+	for _, u := range updates {
+		updateMap[u.Ticker] = u
+	}
+
+	// Update each row
+	for i, row := range resp.Values {
+		if len(row) < 1 {
+			continue
+		}
+		ticker := str(row, 0)
+		u, ok := updateMap[ticker]
+		if !ok {
+			continue
+		}
+
+		sheetRow := i + 2
+		rangeStr := fmt.Sprintf("Alerts!B%d:C%d", sheetRow, sheetRow)
+		values := [][]interface{}{{u.NewAbove, u.NewBelow}}
+		if err := c.write(rangeStr, values); err != nil {
+			return fmt.Errorf("update threshold for %s: %w", ticker, err)
+		}
+	}
+	return nil
+}

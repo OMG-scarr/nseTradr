@@ -13,6 +13,7 @@ import (
 	"nseTradr/cmd/scanner"
 	"nseTradr/cmd/sentiment"
 	"nseTradr/cmd/serve"
+	"nseTradr/cmd/thresholds"
 	"nseTradr/cmd/trade"
 )
 
@@ -51,6 +52,9 @@ func main() {
 	case "trade":
 		fmt.Println("=== Trade Recorder ===")
 		err = trade.Run()
+	case "thresholds":
+		fmt.Println("=== Alert Threshold Updater ===")
+		err = thresholds.Run()
 	default:
 		fmt.Printf("Unknown command: %s\n\n", command)
 		printUsage()

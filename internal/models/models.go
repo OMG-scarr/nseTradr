@@ -1,5 +1,16 @@
 package models
 
+// ThresholdUpdate is the result of a weekly threshold recalculation.
+type ThresholdUpdate struct {
+	Ticker    string  `json:"ticker"`
+	Label     string  `json:"label"`
+	WeeklyAvg float64 `json:"weekly_avg"`
+	NewAbove  float64 `json:"new_alert_above"`
+	NewBelow  float64 `json:"new_alert_below"`
+	PrevAbove float64 `json:"prev_alert_above"`
+	PrevBelow float64 `json:"prev_alert_below"`
+}
+
 // Holding represents one stock position in your portfolio.
 // This is what the "Holdings" sheet contains, one row per stock.
 type Holding struct {
